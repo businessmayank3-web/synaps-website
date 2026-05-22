@@ -4,7 +4,7 @@ import * as React from "react"
 import { useState } from "react";
 import { LogIn, Lock, Mail, Loader2, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
 const SignIn2 = () => {
@@ -40,6 +40,20 @@ const SignIn2 = () => {
       router.push("/app");
     } catch (err: any) {
       setError(err.message || "An error occurred during authentication.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError("");
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      router.push("/app");
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in with Google.");
     } finally {
       setLoading(false);
     }
@@ -117,7 +131,11 @@ const SignIn2 = () => {
           <div className="flex-grow border-t border-white/10"></div>
         </div>
         <div className="flex gap-3 w-full justify-center relative z-10">
-          <button className="flex items-center justify-center w-12 h-12 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition grow">
+          <button 
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            className="flex items-center justify-center w-12 h-12 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition grow disabled:opacity-50"
+          >
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"
               alt="Google"
