@@ -1,9 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
-// Hardcoded for the demo so it's guaranteed to be loaded and never exposed to the frontend.
 // In a real production app, this would be read from process.env.GEMINI_API_KEY
-const genAI = new GoogleGenerativeAI("AIzaSyDwr03p7jkvpKzTJv-hGEa4DeUu1mpqNB4");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(req: Request) {
   try {

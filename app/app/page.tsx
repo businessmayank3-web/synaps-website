@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Activity, Users, Zap, Database, ArrowUpRight, Loader2 } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useAuth } from "@/contexts/AuthContext";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
@@ -129,8 +130,27 @@ export default function Dashboard() {
           className="lg:col-span-2 glass-card rounded-2xl border border-white/10 p-6 min-h-[400px] flex flex-col"
         >
           <h3 className="font-semibold mb-6">Compute Usage Overview</h3>
-          <div className="flex-1 flex items-center justify-center border border-white/5 rounded-xl bg-white/5 border-dashed">
-            <span className="text-white/30 text-sm">Chart rendering visualization...</span>
+          <div className="flex-1 w-full h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={[
+                { name: 'Mon', usage: 120 },
+                { name: 'Tue', usage: 200 },
+                { name: 'Wed', usage: 150 },
+                { name: 'Thu', usage: 320 },
+                { name: 'Fri', usage: 280 },
+                { name: 'Sat', usage: 450 },
+                { name: 'Sun', usage: 380 },
+              ]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="rgba(255,255,255,0.5)" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  itemStyle={{ color: '#0070f3' }}
+                />
+                <Line type="monotone" dataKey="usage" stroke="#0070f3" strokeWidth={3} dot={{ fill: '#0070f3', strokeWidth: 2 }} activeDot={{ r: 8 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </motion.div>
 
