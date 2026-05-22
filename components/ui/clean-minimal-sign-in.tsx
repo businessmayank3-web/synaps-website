@@ -3,8 +3,10 @@
 import * as React from "react"
 import { useState } from "react";
 import { LogIn, Lock, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const SignIn2 = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +25,8 @@ const SignIn2 = () => {
       return;
     }
     setError("");
-    alert("Sign in successful! (Demo)");
+    // Redirect to the backend app interface
+    router.push("/app");
   };
 
   return (
