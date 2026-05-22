@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "./Button";
 import { Brain } from "lucide-react";
@@ -44,8 +45,12 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button variant="glass" size="sm" className="hidden md:flex">Sign In</Button>
-          <Button size="sm">Get Started</Button>
+          <Link href="/sign-in" className="hidden md:flex">
+            <Button variant="glass" size="sm">Sign In</Button>
+          </Link>
+          <Link href="/sign-in">
+            <Button size="sm">Get Started</Button>
+          </Link>
         </div>
       </div>
     </motion.header>

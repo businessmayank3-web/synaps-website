@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Button } from "../ui/Button";
 
 export default function FinalCTA() {
@@ -28,12 +29,16 @@ export default function FinalCTA() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-              Start Building Now
-            </Button>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/20 text-white bg-black/50 backdrop-blur-md">
-              Contact Sales
-            </Button>
+            <Link href="/sign-in" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full shadow-[0_0_40px_rgba(255,255,255,0.3)]">
+                Start Building Now
+              </Button>
+            </Link>
+            <Link href="/sign-in" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full border-white/20 text-white bg-black/50 backdrop-blur-md">
+                Contact Sales
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>
