@@ -49,21 +49,6 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        {/* API Keys */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="glass-card rounded-2xl p-6 border border-white/10"
-        >
-          <h2 className="text-xl font-semibold mb-6">API Keys</h2>
-          <p className="text-sm text-white/50 mb-4">Manage your secret API keys to access Synapse OS programmatic features.</p>
-          <div className="p-4 bg-white/5 border border-white/10 rounded-lg flex items-center justify-between mb-4">
-            <code className="text-brand-blue font-mono text-sm">sk-live-***************************</code>
-            <Button variant="outline" size="sm">Revoke</Button>
-          </div>
-          <Button variant="outline" className="w-full sm:w-auto">Generate New Key</Button>
-        </motion.div>
       </div>
     </div>
   );
