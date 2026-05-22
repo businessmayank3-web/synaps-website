@@ -20,10 +20,19 @@ export async function POST(req: Request) {
     const latestMessage = messages[messages.length - 1].content;
 
     // Convert previous messages to Gemini format (history)
-    const history = messages.slice(0, -1).map((msg: any) => ({
+    const rawHistory = messages.slice(0, -1).map((msg: any) => ({
       role: msg.role === "assistant" ? "model" : "user",
       parts: [{ text: msg.content }],
     }));
+
+    // Gemini requires history to start with a 'user' message. 
+    // Strip leading 'model' messages (like the initial greeting).
+    const history = [];
+    let foundUser = false;
+    for (const msg of rawHistory) {
+      if (msg.role === "user") foundUser = true;
+      if (foundUser) history.push(msg);
+    }
 
     // Start a chat session with history
     const chat = model.startChat({
