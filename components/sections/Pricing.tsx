@@ -11,14 +11,14 @@ export default function Pricing() {
   const plans = [
     {
       name: "Starter",
-      price: annual ? "49" : "59",
+      price: annual ? "85" : "100",
       desc: "Perfect for indie hackers and small projects.",
       features: ["100k requests/mo", "Standard latency", "Community support"],
       highlight: false,
     },
     {
-      name: "Pro",
-      price: annual ? "199" : "249",
+      name: "Team",
+      price: annual ? "220" : "250",
       desc: "For scaling startups and professional teams.",
       features: ["1M requests/mo", "Ultra-low latency", "Priority 24/7 support", "Custom models"],
       highlight: true,
@@ -51,8 +51,14 @@ export default function Pricing() {
               onClick={() => setAnnual(true)}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${annual ? 'bg-white text-black' : 'text-white/50 hover:text-white'}`}
             >
-              Annually <span className="ml-1 text-[10px] uppercase text-brand-blue bg-brand-blue/10 px-2 py-0.5 rounded-full">Save 20%</span>
+              Annually <span className="ml-1 text-[10px] uppercase text-brand-blue bg-brand-blue/10 px-2 py-0.5 rounded-full">Save 15%</span>
             </button>
+          </div>
+
+          <div className="mt-8 inline-block bg-gradient-to-r from-brand-blue/20 to-purple-500/20 border border-brand-blue/30 rounded-xl px-6 py-3">
+            <p className="text-white text-sm font-medium">
+              🎉 <span className="text-brand-blue font-bold">Special Offer:</span> Get 25% off your first order + 7 days free trial!
+            </p>
           </div>
         </div>
 
@@ -72,7 +78,7 @@ export default function Pricing() {
               <h3 className="text-2xl font-semibold mb-2">{plan.name}</h3>
               <p className="text-white/50 text-sm mb-6 h-10">{plan.desc}</p>
               <div className="mb-8">
-                <span className="text-5xl font-bold tracking-tighter">{plan.price !== "Custom" ? `$${plan.price}` : plan.price}</span>
+                <span className="text-5xl font-bold tracking-tighter">{plan.price !== "Custom" ? `₹${plan.price}` : plan.price}</span>
                 {plan.price !== "Custom" && <span className="text-white/40">/mo</span>}
               </div>
               
