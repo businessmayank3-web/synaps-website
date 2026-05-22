@@ -139,7 +139,7 @@ export default function FinalCTA() {
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-white/70 mb-1">Reason for contacting</label>
+                      <label className="block text-sm font-medium text-white/70 mb-1">Reason for contact</label>
                       <textarea 
                         required 
                         rows={4} 
