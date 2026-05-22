@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, Bot, User, Sparkles } from "lucide-react";
 
@@ -19,29 +19,61 @@ export default function ChatInterface() {
     },
   ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, loading]);
+
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
     
     // Add user message
-    const newMessages = [
-      ...messages,
-      { id: Date.now(), role: "user" as const, content: input }
-    ];
+    const userMsg = { id: Date.now(), role: "user" as const, content: input };
+    const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
+    setLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get response");
+      }
+
+      const data = await response.json();
+      
       setMessages(prev => [
         ...prev,
         {
           id: Date.now() + 1,
           role: "assistant",
-          content: "This is a simulated response. Once the database and backend logic are integrated, this will connect to a real LLM endpoint."
+          content: data.text
         }
       ]);
-    }, 1000);
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: "Sorry, I encountered an error. Please try again."
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,6 +114,23 @@ export default function ChatInterface() {
             </div>
           </motion.div>
         ))}
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex gap-4"
+          >
+            <div className="w-8 h-8 rounded-lg bg-brand-blue/20 border border-brand-blue/30 flex items-center justify-center shrink-0">
+              <Bot className="w-4 h-4 text-brand-blue" />
+            </div>
+            <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm p-4 text-sm leading-relaxed flex items-center gap-2">
+              <div className="w-2 h-2 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <div className="w-2 h-2 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <div className="w-2 h-2 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+            </div>
+          </motion.div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
