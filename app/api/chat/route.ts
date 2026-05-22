@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     }
 
     // Initialize the model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
 
     // Extract the latest message
     const latestMessage = messages[messages.length - 1].content;
