@@ -17,6 +17,7 @@
     "autoprefixer": "^10.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "firebase": "^12.13.0",
     "framer-motion": "^11.2.10",
     "gsap": "^3.12.5",
     "isomorphic-git": "^1.38.1",
@@ -38,5 +39,3 @@
     "typescript": "^5"
   }
 }
-
-

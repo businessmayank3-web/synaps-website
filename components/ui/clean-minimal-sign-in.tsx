@@ -2,20 +2,24 @@
 
 import * as React from "react"
 import { useState } from "react";
-import { LogIn, Lock, Mail } from "lucide-react";
+import { LogIn, Lock, Mail, Loader2, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 const SignIn2 = () => {
   const router = useRouter();
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const handleSignIn = () => {
+  const handleAuth = async () => {
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
@@ -25,8 +29,20 @@ const SignIn2 = () => {
       return;
     }
     setError("");
-    // Redirect to the backend app interface
-    router.push("/app");
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      router.push("/app");
+    } catch (err: any) {
+      setError(err.message || "An error occurred during authentication.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,13 +52,13 @@ const SignIn2 = () => {
         <div className="absolute top-0 inset-x-0 h-32 bg-brand-blue/10 blur-[50px] rounded-full pointer-events-none" />
         
         <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 mb-6 border border-white/10 relative z-10 shadow-lg">
-          <LogIn className="w-6 h-6 text-white" />
+          {isSignUp ? <UserPlus className="w-6 h-6 text-white" /> : <LogIn className="w-6 h-6 text-white" />}
         </div>
         <h2 className="text-2xl font-bold mb-2 text-center tracking-tight relative z-10">
-          Welcome back
+          {isSignUp ? "Create an account" : "Welcome back"}
         </h2>
         <p className="text-white/50 text-sm mb-8 text-center relative z-10 leading-relaxed">
-          Sign in to Synapse OS to continue <br/> your journey.
+          {isSignUp ? "Sign up for Synapse OS to start" : "Sign in to Synapse OS to continue"} <br/> your journey.
         </p>
         <div className="w-full flex flex-col gap-4 mb-2 relative z-10">
           <div className="relative group">
@@ -79,11 +95,22 @@ const SignIn2 = () => {
           </div>
         </div>
         <button
-          onClick={handleSignIn}
-          className="w-full bg-white text-black font-semibold py-3 rounded-xl shadow-lg hover:bg-white/90 hover:scale-[1.02] transition-all mb-6 mt-6 relative z-10"
+          onClick={handleAuth}
+          disabled={loading}
+          className="w-full bg-white text-black font-semibold py-3 rounded-xl shadow-lg hover:bg-white/90 hover:scale-[1.02] transition-all mb-4 mt-6 relative z-10 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
         >
-          Get Started
+          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isSignUp ? "Sign Up" : "Sign In"}
         </button>
+        
+        <div className="w-full text-center relative z-10 mb-6">
+          <button 
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-xs text-white/50 hover:text-white transition-colors"
+          >
+            {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+          </button>
+        </div>
         <div className="flex items-center w-full mb-6 relative z-10">
           <div className="flex-grow border-t border-white/10"></div>
           <span className="mx-4 text-xs text-white/40 uppercase tracking-widest">Or</span>

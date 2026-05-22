@@ -1,13 +1,45 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LayoutDashboard, MessageSquare, Settings, LogOut, Brain } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LayoutDashboard, MessageSquare, Settings, LogOut, Brain, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/sign-in");
+    }
+  }, [user, loading, router]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      router.push("/sign-in");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-[#020202]">
+        <Loader2 className="w-8 h-8 text-brand-blue animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect in useEffect
+  }
 
   const navItems = [
     { name: "Dashboard", href: "/app", icon: LayoutDashboard },
@@ -51,13 +83,13 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="p-4 border-t border-white/10">
-          <Link 
-            href="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
+          <button 
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
           >
             <LogOut className="w-5 h-5" />
             <span className="font-medium text-sm">Sign Out</span>
-          </Link>
+          </button>
         </div>
       </motion.aside>
 
