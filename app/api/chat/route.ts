@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 // Hardcoded for the demo so it's guaranteed to be loaded and never exposed to the frontend.
 // In a real production app, this would be read from process.env.GEMINI_API_KEY
-const genAI = new GoogleGenerativeAI("AIzaSyAI3Z8_PHCRrNRiKrOp_5nkctc4H085kh8");
+const genAI = new GoogleGenerativeAI("AIzaSyDwr03p7jkvpKzTJv-hGEa4DeUu1mpqNB4");
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     }
 
     // Initialize the model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     // Extract the latest message
     const latestMessage = messages[messages.length - 1].content;
