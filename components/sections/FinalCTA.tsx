@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Button } from "../ui/Button";
@@ -9,6 +9,12 @@ import { X } from "lucide-react";
 export default function FinalCTA() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setIsContactModalOpen(true);
+    window.addEventListener("openContactModal", handleOpen);
+    return () => window.removeEventListener("openContactModal", handleOpen);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -85,6 +85,13 @@ export default function Pricing() {
               <Button 
                 variant={plan.highlight ? "primary" : "glass"} 
                 className="w-full mb-8"
+                onClick={() => {
+                  if (plan.price === "Custom") {
+                    window.dispatchEvent(new Event("openContactModal"));
+                  } else {
+                    window.location.href = "/sign-in";
+                  }
+                }}
               >
                 {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
               </Button>
