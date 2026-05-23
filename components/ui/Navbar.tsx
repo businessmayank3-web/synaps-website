@@ -20,7 +20,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (pathname?.startsWith("/app")) return null;
+  if (
+    pathname?.startsWith("/app") || 
+    pathname === "/sign-in" || 
+    pathname === "/sign-up"
+  ) return null;
 
   return (
     <motion.header
