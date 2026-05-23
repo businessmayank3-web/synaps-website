@@ -18,6 +18,10 @@ export default function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [upgradeClicked, setUpgradeClicked] = useState(false);
   
+  // In a real app with Stripe integration, we would fetch this from Firestore/backend. 
+  // Defaulting to "Free" as everyone starts there.
+  const [currentPlan, setCurrentPlan] = useState<"Free" | "Starter" | "Pro">("Free");
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveProfile = async () => {
@@ -169,14 +173,30 @@ export default function SettingsPage() {
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8 relative z-10">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-brand-blue/20 flex items-center justify-center border border-brand-blue/30 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
-                  <Crown className="w-7 h-7 text-brand-blue" />
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-lg ${
+                  currentPlan === "Pro" 
+                    ? "bg-brand-blue/20 border-brand-blue/30 shadow-[0_0_20px_rgba(59,130,246,0.3)]" 
+                    : currentPlan === "Starter"
+                    ? "bg-purple-500/20 border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                    : "bg-white/10 border-white/20 shadow-none"
+                }`}>
+                  <Crown className={`w-7 h-7 ${
+                    currentPlan === "Pro" ? "text-brand-blue" : currentPlan === "Starter" ? "text-purple-400" : "text-white/50"
+                  }`} />
                 </div>
                 <div>
                   <h3 className="font-semibold text-sm text-white/70 uppercase tracking-widest mb-1">Current Plan</h3>
                   <div className="flex items-center gap-3">
-                    <p className="text-2xl font-bold text-white">Synapse Pro</p>
-                    <span className="px-3 py-1 text-xs font-semibold bg-brand-blue/20 text-brand-blue rounded-full border border-brand-blue/30">
+                    <p className="text-2xl font-bold text-white">
+                      {currentPlan === "Pro" ? "Synapse Pro" : currentPlan === "Starter" ? "Synapse Starter" : "Synapse Free"}
+                    </p>
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${
+                      currentPlan === "Pro" 
+                        ? "bg-brand-blue/20 text-brand-blue border-brand-blue/30" 
+                        : currentPlan === "Starter"
+                        ? "bg-purple-500/20 text-purple-400 border-purple-500/30"
+                        : "bg-white/10 text-white/60 border-white/20"
+                    }`}>
                       Active
                     </span>
                   </div>
@@ -194,26 +214,32 @@ export default function SettingsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 relative z-10">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-white/70 font-medium">
-                  <Zap className="w-4 h-4 text-brand-blue" />
-                  Unlimited AI
+                  {currentPlan === "Pro" ? <Zap className="w-4 h-4 text-brand-blue" /> : <CheckCircle2 className="w-4 h-4 text-white/50" />}
+                  {currentPlan === "Pro" ? "Unlimited AI" : currentPlan === "Starter" ? "1000 Queries / mo" : "100 Queries / mo"}
                 </div>
-                <p className="text-sm text-white/50">Infinite queries per month with no rate limits.</p>
+                <p className="text-sm text-white/50">
+                  {currentPlan === "Pro" ? "Infinite queries per month with no rate limits." : "Usage resets at the beginning of each billing cycle."}
+                </p>
               </div>
               
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-white/70 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-brand-blue" />
-                  Lightning Fast
+                  <CheckCircle2 className={`w-4 h-4 ${currentPlan === "Pro" ? "text-brand-blue" : currentPlan === "Starter" ? "text-purple-400" : "text-white/50"}`} />
+                  {currentPlan === "Pro" ? "Lightning Fast" : currentPlan === "Starter" ? "Fast Speed" : "Standard Speed"}
                 </div>
-                <p className="text-sm text-white/50">Priority server access for instant responses.</p>
+                <p className="text-sm text-white/50">
+                  {currentPlan === "Pro" ? "Priority server access for instant responses." : "Shared server resources."}
+                </p>
               </div>
 
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-white/70 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-brand-blue" />
-                  Advanced Code
+                  <CheckCircle2 className={`w-4 h-4 ${currentPlan === "Pro" ? "text-brand-blue" : currentPlan === "Starter" ? "text-purple-400" : "text-white/50"}`} />
+                  {currentPlan === "Pro" ? "Advanced Code" : "Basic Access"}
                 </div>
-                <p className="text-sm text-white/50">Full access to advanced coding and UI capabilities.</p>
+                <p className="text-sm text-white/50">
+                  {currentPlan === "Pro" ? "Full access to advanced coding and UI capabilities." : "Access to standard chat capabilities."}
+                </p>
               </div>
             </div>
           </motion.div>
