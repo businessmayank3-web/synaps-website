@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TestimonialsColumn, type Testimonial } from "@/components/ui/testimonials-columns-1";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Quote } from "lucide-react";
+import InteractiveRating from "./InteractiveRating";
 
 const testimonials = [
   {
@@ -96,6 +97,9 @@ export default function Testimonials() {
           <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={45} onTestimonialClick={setActiveTestimonial} />
           <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={38} onTestimonialClick={setActiveTestimonial} />
         </div>
+        
+        {/* New Interactive Rating Section */}
+        <InteractiveRating />
       </div>
 
       {/* Testimonial Modal */}
