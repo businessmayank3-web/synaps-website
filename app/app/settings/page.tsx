@@ -79,7 +79,7 @@ export default function SettingsPage() {
         <p className="text-white/50 text-sm">Manage your account settings and billing preferences.</p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="flex flex-col gap-8 max-w-3xl">
         
         {/* Left Column: Profile */}
         <div className="md:col-span-2 space-y-8">
@@ -156,59 +156,66 @@ export default function SettingsPage() {
               </Button>
             </div>
           </motion.div>
-        </div>
 
-        {/* Right Column: Plan & Subscription */}
-        <div className="space-y-8">
+          {/* Current Plan Section */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="glass-card rounded-3xl p-6 border border-brand-blue/30 relative overflow-hidden bg-brand-blue/5"
+            className="glass-card rounded-3xl p-8 border border-brand-blue/30 relative overflow-hidden bg-brand-blue/5"
           >
             {/* Background Glow */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/20 blur-[50px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/10 blur-[80px] rounded-full pointer-events-none" />
 
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-brand-blue/20 flex items-center justify-center border border-brand-blue/30">
-                <Crown className="w-5 h-5 text-brand-blue" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8 relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-brand-blue/20 flex items-center justify-center border border-brand-blue/30 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                  <Crown className="w-7 h-7 text-brand-blue" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm text-white/70 uppercase tracking-widest mb-1">Current Plan</h3>
+                  <div className="flex items-center gap-3">
+                    <p className="text-2xl font-bold text-white">Synapse Pro</p>
+                    <span className="px-3 py-1 text-xs font-semibold bg-brand-blue/20 text-brand-blue rounded-full border border-brand-blue/30">
+                      Active
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-sm text-white/70 uppercase tracking-widest">Current Plan</h3>
-                <p className="text-xl font-bold text-white">Free Tier</p>
-              </div>
+              
+              <Button 
+                variant="glass"
+                className="w-full sm:w-auto hover:bg-white/10 transition-colors"
+              >
+                Manage Billing
+              </Button>
             </div>
 
-            <div className="space-y-3 mb-6">
-              <div className="flex items-center gap-2 text-sm text-white/70">
-                <CheckCircle2 className="w-4 h-4 text-brand-blue" />
-                <span>100 AI Queries / Month</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 relative z-10">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-white/70 font-medium">
+                  <Zap className="w-4 h-4 text-brand-blue" />
+                  Unlimited AI
+                </div>
+                <p className="text-sm text-white/50">Infinite queries per month with no rate limits.</p>
               </div>
-              <div className="flex items-center gap-2 text-sm text-white/70">
-                <CheckCircle2 className="w-4 h-4 text-brand-blue" />
-                <span>Standard Speed</span>
+              
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-white/70 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" />
+                  Lightning Fast
+                </div>
+                <p className="text-sm text-white/50">Priority server access for instant responses.</p>
               </div>
-              <div className="flex items-center gap-2 text-sm text-white/70">
-                <CheckCircle2 className="w-4 h-4 text-brand-blue" />
-                <span>Basic Code Generation</span>
+
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-white/70 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-brand-blue" />
+                  Advanced Code
+                </div>
+                <p className="text-sm text-white/50">Full access to advanced coding and UI capabilities.</p>
               </div>
             </div>
-
-            <Button 
-              onClick={() => setUpgradeClicked(true)}
-              disabled={upgradeClicked}
-              className="w-full bg-white text-black hover:bg-white/90 flex items-center justify-center gap-2 group transition-all"
-            >
-              {upgradeClicked ? (
-                "Coming Soon!"
-              ) : (
-                <>
-                  <Zap className="w-4 h-4 text-brand-blue group-hover:scale-110 transition-transform" />
-                  Upgrade to Pro
-                </>
-              )}
-            </Button>
-            <p className="text-center text-xs text-white/40 mt-3">Starting at ₹149/mo</p>
           </motion.div>
         </div>
       </div>
