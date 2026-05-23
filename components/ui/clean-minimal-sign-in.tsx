@@ -81,7 +81,7 @@ const SignIn2 = ({ defaultIsSignUp = false }: SignInProps) => {
         
         {/* Back Button */}
         <button 
-          onClick={() => router.back()}
+          onClick={() => router.push('/')}
           className="absolute top-6 left-6 p-2 rounded-full hover:bg-white/10 transition-colors text-white/50 hover:text-white z-20"
           title="Go back"
         >
