@@ -48,7 +48,7 @@ export default function Navbar() {
           <Link href="/sign-in" className="hidden md:flex">
             <Button variant="glass" size="sm">Sign In</Button>
           </Link>
-          <Link href="/sign-in">
+          <Link href="/sign-up">
             <Button size="sm">Get Started</Button>
           </Link>
         </div>

@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import Navbar from "@/components/ui/Navbar";
+import SupportChat from "@/components/ui/SupportChat";
+import CookieConsent from "@/components/ui/CookieConsent";
+import NotificationConsent from "@/components/ui/NotificationConsent";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,6 +27,9 @@ export default function RootLayout({
           <SmoothScroll>
             <Navbar />
             {children}
+            <SupportChat />
+            <CookieConsent />
+            <NotificationConsent />
           </SmoothScroll>
         </AuthProvider>
       </body>

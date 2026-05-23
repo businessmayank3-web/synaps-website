@@ -13,6 +13,7 @@ export const TestimonialsColumn = (props: {
   className?: string;
   testimonials: Testimonial[];
   duration?: number;
+  onTestimonialClick?: (t: Testimonial) => void;
 }) => {
   return (
     <div className={props.className}>
@@ -32,7 +33,11 @@ export const TestimonialsColumn = (props: {
           ...new Array(2).fill(0).map((_, index) => (
             <React.Fragment key={index}>
               {props.testimonials.map(({ text, image, name, role }, i) => (
-                <div className="p-10 rounded-3xl border border-white/10 glass-card max-w-xs w-full" key={i}>
+                <div 
+                  className="p-10 rounded-3xl border border-white/10 glass-card max-w-xs w-full cursor-pointer hover:bg-white/[0.08] transition-colors" 
+                  key={i}
+                  onClick={() => props.onTestimonialClick?.({ text, image, name, role })}
+                >
                   <div className="text-white/80 leading-relaxed text-sm">{text}</div>
                   <div className="flex items-center gap-4 mt-8">
                     <img

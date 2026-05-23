@@ -2,24 +2,34 @@
 
 import * as React from "react"
 import { useState } from "react";
-import { LogIn, Lock, Mail, Loader2, UserPlus } from "lucide-react";
+import { LogIn, Lock, Mail, Loader2, UserPlus, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
-const SignIn2 = () => {
+interface SignInProps {
+  defaultIsSignUp?: boolean;
+}
+
+const SignIn2 = ({ defaultIsSignUp = false }: SignInProps) => {
   const router = useRouter();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(defaultIsSignUp);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   const handleAuth = async () => {
+    if (isSignUp && !agreedToTerms) {
+      setError("You must agree to the Terms of Service and Privacy Policy to create an account.");
+      return;
+    }
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
@@ -46,6 +56,10 @@ const SignIn2 = () => {
   };
 
   const handleGoogleSignIn = async () => {
+    if (isSignUp && !agreedToTerms) {
+      setError("You must agree to the Terms of Service and Privacy Policy to create an account.");
+      return;
+    }
     setError("");
     setLoading(true);
     const provider = new GoogleAuthProvider();
@@ -101,12 +115,32 @@ const SignIn2 = () => {
           </div>
           <div className="w-full flex justify-between items-center mt-1 h-4">
             {error ? (
-              <div className="text-xs text-red-400 text-left">{error}</div>
+              <div className="text-xs text-red-400 text-left w-full">{error}</div>
             ) : <div />}
-            <button className="text-xs text-white/50 hover:text-white transition-colors font-medium">
-              Forgot password?
-            </button>
+            {!isSignUp && !error && (
+              <button className="text-xs text-white/50 hover:text-white transition-colors font-medium ml-auto">
+                Forgot password?
+              </button>
+            )}
           </div>
+          
+          {isSignUp && (
+            <div className="flex items-start gap-3 mt-4 relative z-10">
+              <button
+                type="button"
+                onClick={() => {
+                  setAgreedToTerms(!agreedToTerms);
+                  setError(""); // Clear error when interacting
+                }}
+                className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 transition-colors mt-0.5 ${agreedToTerms ? 'bg-brand-blue border-brand-blue text-white' : 'border-white/20 bg-white/5 hover:border-white/40'}`}
+              >
+                {agreedToTerms && <Check className="w-3.5 h-3.5" />}
+              </button>
+              <p className="text-xs text-white/60 leading-relaxed text-left">
+                I agree to the <Link href="/info/terms" className="text-brand-blue hover:text-brand-blue/80 underline underline-offset-2">Terms of Service</Link> and <Link href="/info/privacy" className="text-brand-blue hover:text-brand-blue/80 underline underline-offset-2">Privacy Policy</Link>.
+              </p>
+            </div>
+          )}
         </div>
         <button
           onClick={handleAuth}

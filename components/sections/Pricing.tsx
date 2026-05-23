@@ -7,20 +7,21 @@ import { Check } from "lucide-react";
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(true);
+  const [clickedPlans, setClickedPlans] = useState<Record<number, boolean>>({});
 
   const plans = [
     {
       name: "Starter",
-      price: annual ? "85" : "100",
+      price: annual ? "850" : "100",
       desc: "Perfect for indie hackers and small projects.",
-      features: ["100k requests/mo", "Standard latency", "Community support"],
+      features: [annual ? "650 credits/day" : "500 credits/day", "Standard latency", "Community support"],
       highlight: false,
     },
     {
-      name: "Team",
-      price: annual ? "220" : "250",
+      name: "Pro",
+      price: annual ? "2,200" : "250",
       desc: "For scaling startups and professional teams.",
-      features: ["1M requests/mo", "Ultra-low latency", "Priority 24/7 support", "Custom models"],
+      features: [annual ? "1150 credits/day" : "1000 credits/day", "Ultra-low latency", "Priority 24/7 support", "Custom models"],
       highlight: true,
     },
     {
@@ -51,7 +52,7 @@ export default function Pricing() {
               onClick={() => setAnnual(true)}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${annual ? 'bg-white text-black' : 'text-white/50 hover:text-white'}`}
             >
-              Annually <span className="ml-1 text-[10px] uppercase text-brand-blue bg-brand-blue/10 px-2 py-0.5 rounded-full">Save 15%</span>
+              Annually <span className="ml-1 text-[10px] uppercase text-brand-blue bg-brand-blue/10 px-2 py-0.5 rounded-full">Save 15%</span><span className="ml-1 text-[10px] uppercase text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">+ 14-Day Refund</span>
             </button>
           </div>
 
@@ -79,7 +80,7 @@ export default function Pricing() {
               <p className="text-white/50 text-sm mb-6 h-10">{plan.desc}</p>
               <div className="mb-8">
                 <span className="text-5xl font-bold tracking-tighter">{plan.price !== "Custom" ? `₹${plan.price}` : plan.price}</span>
-                {plan.price !== "Custom" && <span className="text-white/40">/mo</span>}
+                {plan.price !== "Custom" && <span className="text-white/40">{annual ? "/yr" : "/mo"}</span>}
               </div>
               
               <Button 
@@ -89,11 +90,11 @@ export default function Pricing() {
                   if (plan.price === "Custom") {
                     window.dispatchEvent(new Event("openContactModal"));
                   } else {
-                    window.location.href = "/sign-in";
+                    setClickedPlans(prev => ({ ...prev, [i]: true }));
                   }
                 }}
               >
-                {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
+                {plan.price === "Custom" ? "Contact Sales" : clickedPlans[i] ? "Coming Soon!" : "Get Started"}
               </Button>
               
               <ul className="space-y-4">

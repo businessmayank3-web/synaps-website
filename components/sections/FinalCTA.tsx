@@ -50,7 +50,7 @@ export default function FinalCTA() {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/sign-in" className="w-full sm:w-auto">
+              <Link href="/sign-up" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full shadow-[0_0_40px_rgba(255,255,255,0.3)]">
                   Start Building Now
                 </Button>

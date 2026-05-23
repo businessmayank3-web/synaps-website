@@ -6,17 +6,20 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const { messages, modelTier } = await req.json();
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ error: "Messages are required" }, { status: 400 });
     }
 
-    // Initialize the model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    // Hardcoded to the model explicitly requested by the user
+    const actualModelString = "gemini-3.1-flash-lite";
+    let model = genAI.getGenerativeModel({ model: actualModelString });
 
     // Extract the latest message
-    const latestMessage = messages[messages.length - 1].content;
+    const latestMessageObj = messages[messages.length - 1];
+    const latestMessageText = latestMessageObj.content;
+    const imageUrl = latestMessageObj.imageUrl;
 
     // Convert previous messages to Gemini format (history)
     const rawHistory = messages.slice(0, -1).map((msg: any) => ({
@@ -41,12 +44,51 @@ export async function POST(req: Request) {
       },
     });
 
-    // Send the latest message
-    const result = await chat.sendMessage(latestMessage);
-    const response = await result.response;
-    const text = response.text();
+    let payload: any = latestMessageText;
 
-    return NextResponse.json({ text });
+    // If there is an image, fetch it and convert to base64 for Gemini
+    if (imageUrl) {
+      try {
+        const imageRes = await fetch(imageUrl);
+        const arrayBuffer = await imageRes.arrayBuffer();
+        const base64Data = Buffer.from(arrayBuffer).toString("base64");
+        const mimeType = imageRes.headers.get("content-type") || "image/jpeg";
+
+        payload = [
+          { text: latestMessageText || "Describe this image in detail." },
+          {
+            inlineData: {
+              data: base64Data,
+              mimeType: mimeType,
+            },
+          },
+        ];
+      } catch (err) {
+        console.error("Error fetching image from Firebase Storage:", err);
+      }
+    }
+
+    // Stream the response back
+    const result = await chat.sendMessageStream(payload);
+    
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of result.stream) {
+            const chunkText = chunk.text();
+            controller.enqueue(new TextEncoder().encode(chunkText));
+          }
+        } catch (e) {
+          console.error("Stream error:", e);
+        } finally {
+          controller.close();
+        }
+      }
+    });
+
+    return new Response(stream, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" }
+    });
   } catch (error: any) {
     console.error("Gemini API Error:", error);
     return NextResponse.json({ error: "Failed to generate response" }, { status: 500 });

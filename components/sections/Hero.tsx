@@ -9,12 +9,15 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Spline 3D Scene */}
-      <div className="absolute inset-0 z-0 pointer-events-auto">
+      <div className="absolute inset-0 z-0 pointer-events-auto hidden md:block">
         <Spline scene="https://prod.spline.design/OQJgwnHyt3Jol5GQ/scene.splinecode" />
       </div>
 
       {/* Dark overlay to ensure text is readable, adjustable based on the Spline scene brightness */}
       <div className="absolute inset-0 z-0 bg-black/40 pointer-events-none mix-blend-multiply" />
+      
+      {/* Spline Watermark Hide Hack */}
+      <div className="absolute bottom-0 right-0 w-40 h-16 bg-background z-10 pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10 pointer-events-none">
         <motion.div
@@ -44,10 +47,12 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-start justify-start gap-4 pointer-events-auto">
-            <Link href="/sign-in" className="w-full sm:w-auto">
+            <Link href="/sign-up" className="w-full sm:w-auto">
               <Button size="lg" className="w-full">Get Started</Button>
             </Link>
-            <Button variant="glass" size="lg" className="w-full sm:w-auto">Watch Demo</Button>
+            <Link href="/tutorial" className="w-full sm:w-auto">
+              <Button variant="glass" size="lg" className="w-full">Watch Demo</Button>
+            </Link>
           </div>
         </motion.div>
       </div>

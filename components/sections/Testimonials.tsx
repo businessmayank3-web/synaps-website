@@ -1,7 +1,9 @@
 "use client";
 
-import { TestimonialsColumn } from "@/components/ui/testimonials-columns-1";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { TestimonialsColumn, type Testimonial } from "@/components/ui/testimonials-columns-1";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Quote } from "lucide-react";
 
 const testimonials = [
   {
@@ -65,6 +67,7 @@ const secondColumn = testimonials.slice(3, 6);
 const thirdColumn = testimonials.slice(6, 9);
 
 export default function Testimonials() {
+  const [activeTestimonial, setActiveTestimonial] = useState<Testimonial | null>(null);
   return (
     <section className="py-32 relative overflow-hidden bg-black/40">
       <div className="absolute inset-0 bg-brand-blue/5 blur-[100px] rounded-full pointer-events-none" />
@@ -89,11 +92,61 @@ export default function Testimonials() {
         </motion.div>
 
         <div className="flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] max-h-[800px] overflow-hidden -mx-6 px-6 relative z-10">
-          <TestimonialsColumn testimonials={firstColumn} duration={35} />
-          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={45} />
-          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={38} />
+          <TestimonialsColumn testimonials={firstColumn} duration={35} onTestimonialClick={setActiveTestimonial} />
+          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={45} onTestimonialClick={setActiveTestimonial} />
+          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={38} onTestimonialClick={setActiveTestimonial} />
         </div>
       </div>
+
+      {/* Testimonial Modal */}
+      <AnimatePresence>
+        {activeTestimonial && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveTestimonial(null)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-xl glass-card rounded-3xl overflow-hidden border border-white/10 shadow-2xl p-8 md:p-12"
+            >
+              <div className="absolute top-8 left-8 text-white/5 pointer-events-none">
+                <Quote className="w-24 h-24" />
+              </div>
+              
+              <div className="relative z-10">
+                <p className="text-xl md:text-2xl font-light leading-relaxed text-white/90 mb-10">
+                  "{activeTestimonial.text}"
+                </p>
+                
+                <div className="flex items-center gap-5">
+                  <img
+                    src={activeTestimonial.image}
+                    alt={activeTestimonial.name}
+                    className="h-16 w-16 rounded-full border border-white/20 shadow-lg object-cover"
+                  />
+                  <div className="flex flex-col">
+                    <div className="font-semibold text-lg text-white">{activeTestimonial.name}</div>
+                    <div className="text-brand-blue font-medium mt-0.5">{activeTestimonial.role}</div>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setActiveTestimonial(null)}
+                className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/20 rounded-full transition-colors text-white border border-white/10 z-20"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
