@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useState } from "react";
-import { LogIn, Lock, Mail, Loader2, UserPlus, Check } from "lucide-react";
+import { LogIn, Lock, Mail, Loader2, UserPlus, Check, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -78,6 +78,15 @@ const SignIn2 = ({ defaultIsSignUp = false }: SignInProps) => {
       <div className="w-full max-w-sm glass-card rounded-3xl p-8 flex flex-col items-center border border-white/10 text-white relative overflow-hidden">
         {/* Subtle background glow */}
         <div className="absolute top-0 inset-x-0 h-32 bg-brand-blue/10 blur-[50px] rounded-full pointer-events-none" />
+        
+        {/* Back Button */}
+        <button 
+          onClick={() => router.back()}
+          className="absolute top-6 left-6 p-2 rounded-full hover:bg-white/10 transition-colors text-white/50 hover:text-white z-20"
+          title="Go back"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
         
         <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 mb-6 border border-white/10 relative z-10 shadow-lg">
           {isSignUp ? <UserPlus className="w-6 h-6 text-white" /> : <LogIn className="w-6 h-6 text-white" />}
