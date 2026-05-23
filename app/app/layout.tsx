@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, MessageSquare, Settings, LogOut, Brain, Loader2, Plus, MessageCircle, Trash2, Menu, X } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Settings, LogOut, Brain, Loader2, Plus, MessageCircle, Trash2, Menu, X, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "firebase/auth";
@@ -64,9 +64,18 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      router.push("/sign-in");
+      router.push("/"); // Redirect to hero section as requested
     } catch (error) {
       console.error("Error signing out:", error);
+    }
+  };
+
+  const handleSwitchAccount = async () => {
+    try {
+      await signOut(auth);
+      router.push("/sign-in"); // Redirect to sign in page
+    } catch (error) {
+      console.error("Error switching account:", error);
     }
   };
 
@@ -174,7 +183,14 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           </div>
         </nav>
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 space-y-2">
+          <button 
+            onClick={handleSwitchAccount}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
+          >
+            <Users className="w-5 h-5" />
+            <span className="font-medium text-sm">Switch Account</span>
+          </button>
           <button 
             onClick={handleSignOut}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
@@ -265,7 +281,14 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 </div>
               </nav>
 
-              <div className="p-4 border-t border-white/10">
+              <div className="p-4 border-t border-white/10 space-y-2">
+                <button 
+                  onClick={() => { setIsMobileMenuOpen(false); handleSwitchAccount(); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  <Users className="w-5 h-5" />
+                  <span className="font-medium text-sm">Switch Account</span>
+                </button>
                 <button 
                   onClick={() => { setIsMobileMenuOpen(false); handleSignOut(); }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
